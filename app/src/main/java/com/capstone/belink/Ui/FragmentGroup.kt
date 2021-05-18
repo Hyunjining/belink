@@ -70,12 +70,13 @@ class FragmentGroup : Fragment() {
     }
 
     /**
-    * 활동이 재개됨 상태로 전환되었을 때 onResume 생명주기가 실행된다. 앱이 실질적으로 실행되기전 단계
-    * 이 상태에서 수명 주기 구성요소가 foreground에서 사용자에게 보이는 동안 실행해야 하는 모든 기능을 활성화
-    * 그러므로 onResume 생명주기때 액션바에 장착된 메뉴바를 다시 그리게 하는 메소드인 invalidate~~ 를 쓰는 이유가 된다.*/
+     * 활동이 재개됨 상태로 전환되었을 때 onResume 생명주기가 실행된다. 앱이 실질적으로 실행되기전 단계
+     * 이 상태에서 수명 주기 구성요소가 foreground에서 사용자에게 보이는 동안 실행해야 하는 모든 기능을 활성화
+     * 그러므로 onResume 생명주기때 액션바에 장착된 메뉴바를 다시 그리게 하는 메소드인 invalidate~~ 를 쓰는 이유가 된다.*/
     override fun onResume() {//생명주기 중 한 부분
         super.onResume()
         activity!!.invalidateOptionsMenu() // 메뉴를 다시 그리게 할 때 쓰이는 메소드
+        refreshAdapter()
     }
 
     override fun onCreateView(
@@ -100,6 +101,12 @@ class FragmentGroup : Fragment() {
         return binding.root
     }
 
+    fun refreshAdapter(){
+        val teamList= getGroupPref(xContext, "groupContext")
+        adapter = RecyclerAdapter(xContext)
+        adapter.DataList=teamList
+        binding.viewRecycler.adapter=adapter
+    }
 
 
     companion object {
@@ -114,12 +121,12 @@ class FragmentGroup : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                FragmentGroup().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
+            FragmentGroup().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
                 }
+            }
     }
 
 

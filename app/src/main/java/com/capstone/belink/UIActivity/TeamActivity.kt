@@ -117,10 +117,8 @@ class TeamActivity : AppCompatActivity() {
                                                 println("makeMember 수행중")
                                                 println(response.message())
                                                 if (response.message() == "OK") {
-                                                    println("100퍼센트 여기서 안됨")
                                                     val teamList= getGroupPref(this@TeamActivity,"groupContext")
                                                     val obj = TeamRoom(id =id!!, teamName = teamName, data =teamMember)
-                                                    println("진짜로 안되네 ")
                                                     teamList.add(obj)
                                                     setGroupPref(this@TeamActivity,"groupContext",teamList)
                                                     getSharedPreferences("team", MODE_PRIVATE).edit().clear().commit()

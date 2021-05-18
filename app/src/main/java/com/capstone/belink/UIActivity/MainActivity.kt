@@ -11,12 +11,16 @@ import android.nfc.tech.IsoDep
 import android.nfc.tech.Ndef
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.belink.Adapter.FragmentStateAdapter
@@ -28,6 +32,7 @@ import com.capstone.belink.Utils.CardService
 import com.capstone.belink.Utils.HexUtils
 import com.capstone.belink.databinding.ActivityMainBinding
 import retrofit2.Retrofit
+
 
 class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
     private var mBinding:ActivityMainBinding?=null
@@ -42,11 +47,18 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
 
 //    private lateinit var nfcAdapter: NfcAdapter
 
+    private val fragmentMain by lazy { FragmentMain()}
+    private val fragmentGroup by lazy { FragmentGroup()}
+    private val fragmentMap by lazy { FragmentMap()}
+    private val fragmentEtcetra by lazy { FragmentEtcetra()}
+
+
 
     private var fragmentLists = listOf(FragmentMain(), FragmentGroup(), FragmentMap(), FragmentEtcetra())
 
 
     override fun onResume() {
+
         super.onResume()
 //        nfcAdapter.enableReaderMode(
 //                this,
@@ -62,6 +74,8 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
         setContentView(binding.root)
 //        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+      //  startActivity(intent)
 
         pref =getSharedPreferences("auto", Activity.MODE_PRIVATE)!!
         prefEdit=pref.edit()
@@ -75,6 +89,7 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+
 //        if(NfcAdapter.ACTION_NDEF_DISCOVERED == intent?.action){
 //
 //            intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also { rawMessages->
@@ -128,6 +143,16 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
                 startActivity(intent)
                 true
             }
+//            R.id.action_setting_group_delete->{
+//                val intent = Intent(this, TeamDeleteActivity::class.java)
+//                startActivity(intent)
+//                true
+//            }
+//            R.id.action_setting_group_update->{
+//                val intent = Intent(this, TeamUpdateActivity::class.java)
+//                startActivity(intent)
+//                true
+//        }
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -148,6 +173,12 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
         supplementService = retrofit.create(RetrofitService::class.java)
     }
 
+    private fun changeFragment(fragment: Fragment){
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.main_layout, fragment)
+                .commit()
+    }
 
     /**
      * 뷰페이저에 관한 것을 묶은 함수
@@ -156,63 +187,28 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
      * 밑에 바텀네비게이션뷰에 대한 처리는 해당 페이지가 넘어갔을 때 그에 맞는 아이콘을 표시하기 위해
      * 처리한 구문이다.*/
     private fun init() {
-        var adapter = FragmentStateAdapter(this)
-        adapter.fragmentList=fragmentLists
-
-        binding.viewPager.adapter=adapter
-
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                when(position){
-                    0 -> {
-                        binding.bottomNavigationView.selectedItemId = R.id.main
-                        supportActionBar?.title="개인"
-                        println("개인페이지")
-
-                    }
-                    1 -> {
-                        binding.bottomNavigationView.selectedItemId = R.id.friend
-                        supportActionBar?.title="그룹"
-                        println("그룹페이지")
-                    }
-                    2 -> {
-                        binding.bottomNavigationView.selectedItemId = R.id.map
-                        supportActionBar?.title="방문장소"
-                        println("방문장소페이지")
-                    }
-                    3 -> {
-                        binding.bottomNavigationView.selectedItemId = R.id.etcetra
-                        supportActionBar?.title="설정"
-                        println("설정페이지")
-                    }
-                }
-
-            }
-        })
-
-
-
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.main -> {
-                    binding.viewPager.currentItem = 0
+        binding.bottomNavigationView.run{
+            setOnNavigationItemSelectedListener {
+                when(it.itemId){
+                    R.id.main -> {
+                    changeFragment(fragmentMain)
                 }
                 R.id.friend -> {
-                    binding.viewPager.currentItem = 1
+                    changeFragment(fragmentGroup)
                 }
                 R.id.map -> {
-                    binding.viewPager.currentItem = 2
+                    changeFragment(fragmentMap)
                 }
                 R.id.etcetra -> {
-                    binding.viewPager.currentItem = 3
+                    changeFragment(fragmentEtcetra)
                 }
+                }
+                true
             }
-            prefEdit.apply()
-            return@setOnNavigationItemSelectedListener true
+            selectedItemId = R.id.main
         }
-    }
 
+    }
 
 
     override fun onDestroy() {
@@ -222,6 +218,7 @@ class MainActivity : AppCompatActivity() {//, NfcAdapter.ReaderCallback
 
     override fun onPause() {
         super.onPause()
+
 //        nfcAdapter.disableReaderMode(this)
 
     }

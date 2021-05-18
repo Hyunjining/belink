@@ -1,12 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.appcompat.widget.LinearLayoutCompat
+
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+tools:context=".UIActivity.MainActivity"
+    >
+
+<TextView
+    android:id="@+id/calendar_year_month_text"
     android:layout_width="match_parent"
-    android:id="@+id/frag_map"
-    android:layout_height="match_parent">
+    android:layout_height="60dp"
+    android:text="2020년 01월"
+    android:textSize="25sp"
+    android:textStyle="bold"
+    android:gravity="center_vertical|start"
+    android:layout_marginStart="20dp"
+   />
 
+<View
+    android:id="@+id/div"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+  />
 
+<LinearLayout
+    android:id="@+id/calendar_header"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="SUN"
+        />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="MON"
+        />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="TUE"
+       />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="WED"
+       />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="THU"
+     />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="FRI"
+     />
+    <TextView android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:text="SAT"
+      />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/calendar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendar_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:spanCount="7"
+        android:adjustViewBounds="true"
+        app:layout_constrainedHeight="true"
+        tools:listitem="@layout/list_item_calendar"/>
+
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:layout_constrainedHeight="true"
+            app:spanCount="7"
+            tools:listitem="@layout/list_item_calendar2" />
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
